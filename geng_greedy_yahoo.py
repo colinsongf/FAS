@@ -8,7 +8,7 @@ starting from the feature most correlated with y
 
 root='/home/asus/quickrank/data/Webscope_C14B/'
 
-L=[208]
+L=[26,52,104,156,208,260,389]
 lists=[]
 c=0.01
 

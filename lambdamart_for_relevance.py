@@ -1,4 +1,4 @@
-# adattamento di LABDAMART da https://github.com/discobot/LambdaMart/blob/acb8329ab63a45d2bcb43055fa54f14b8c6725c1/mart.py al nostro caso
+#adaptated from https://github.com/discobot/LambdaMart/blob/acb8329ab63a45d2bcb43055fa54f14b8c6725c1/mart.py 
 
 import math
 import numpy as np
@@ -7,9 +7,7 @@ from optparse import OptionParser
 from sklearn.tree import DecisionTreeRegressor
 from multiprocessing import Pool
 from itertools import chain
-import time
 import pandas as pd
-from numpy import mean
 
 class Ensemble:
     def __init__(self, rate):
@@ -76,6 +74,7 @@ def compute_ndcg(page, k=10):
         return 1
 
     return dcg / idcg
+
 
 def ndcg(prediction, true_score, query, k=10):
     true_pages = groupby(true_score, query)
@@ -192,11 +191,10 @@ def learn(train_file, validation_file, n_trees=10, learning_rate=0.1, k=10):
         model_output += learning_rate * prediction
 
         # train_score
-        #start = time.clock()
         print "  --scoring on train"
         train_score = ndcg(model_output, scores, queries, 10)
-        print "  --iteration train score " + str(train_score) #+ ", took " + str(time.clock() - start) + "sec to calculate"
-
+        print "  --iteration train score " + str(train_score) 
+        
         # validation score
         print "  --scoring on validation"
         val_output += learning_rate * tree.predict(val_features)
@@ -215,12 +213,13 @@ def evaluate(model, fn,i):
     
     true_label=predict[:, 0]
     queries = predict[:, 1]
-    #doc_id  = predict[:, 2] 
     features = predict[:, 2:]
 
     results = model.eval(features)
     ndcg_at_k=ndcg(results,true_label,queries,10)
+    
     path='C:\Users\\t000524\Documents\data\Fold1\\results_'+i+'.txt'
+    
     with open(path,'w') as csvfile:
         writer = csv.writer(csvfile)
         for line in zip(queries, results, true_label):
@@ -229,19 +228,23 @@ def evaluate(model, fn,i):
 
     return ndcg_at_k
 
+
 def feat_ranker(feat_number,measure_name):
+    
     feat_rank_path='C:\Users\\t000524\Documents\data\Fold1\\feature_rank.txt'
+    
     df=pd.read_csv(feat_rank_path,
                    sep="\t",
                    skiprows=0,
                    usecols=[measure_name],
                    header=0)
-    
-    #print len(df)
+
     df["feat_nr"]=range(1,len(df)+1)
+    
     result = df.sort([measure_name], ascending=False)
     
     return result['feat_nr'].head(n=feat_number).tolist()
+
 
 def average_ndcg(rpath,k):
     #mean absolut error macroaveraging
@@ -254,11 +257,11 @@ def average_ndcg(rpath,k):
     
     for i in cases:
         subdf = df[(df.iloc[:,0] == i)]
-#        ndcg.append(ndcg_at_k(subdf.iloc[:,1],k))
     
     maem=[]
     print "MAEM: ", maem
     return maem
+
 
 def get_selected_features(feature_list, train_path, vali_path, test_path):
     
@@ -276,7 +279,6 @@ def get_selected_features(feature_list, train_path, vali_path, test_path):
                    header=0)
     
     df.to_csv("C:\Users\\t000524\Documents\data\Fold1\\selected_train_features.txt",sep="\t",header=False,index=False)
-    #print df.head(n=5)
     
     df=pd.read_csv(vali_path,
                    sep="\t",
@@ -285,7 +287,6 @@ def get_selected_features(feature_list, train_path, vali_path, test_path):
                    header=0)
     
     df.to_csv("C:\Users\\t000524\Documents\data\Fold1\\selected_validation_features.txt",sep="\t",header=False,index=False)
-    #print df.head(n=5)
     
     df=pd.read_csv(test_path,
                    sep="\t",
@@ -294,44 +295,38 @@ def get_selected_features(feature_list, train_path, vali_path, test_path):
                    header=0)
     
     df.to_csv("C:\Users\\t000524\Documents\data\Fold1\\selected_test_features.txt",sep="\t",header=False,index=False)
-    #print df.head(n=5)
 
 if __name__ == "__main__":
+    
     parser = OptionParser()
+    
     parser.add_option("-t", "--train", action="store", type="string", dest="train_file")
     parser.add_option("-v", "--validation", action="store", type="string", dest="val_file")
     parser.add_option("-p", "--predict", action="store", type="string", dest="predict_file")
+
     options, args = parser.parse_args()
-    iterations = 50
+    
     learning_rate = 0.1
     ndcg_at_k_matrix=[]
-
-    '''
-    print "Baseline model: LambdaMart su tutte le features"
-    model = learn(options.train_file, options.val_file, n_trees=200)
-    evaluate(model, options.predict_file)
-    rpath='C:\Users\\t000524\Documents\data\Fold1\\results.txt'
-    maems.append(maem(rpath))
-    print maems
-    '''
     
     trials=range(1,137)
     measures=["MI"]
     
     for measure in measures:
+        
         ndcg_at_k_list=[]
+        
         for nr_feat_to_select in trials:
-            #feat_list=feat_ranker(nr_feat_to_select, measure)
-            #feat_list=[134, 126, 96, 43, 103, 14, 100, 133, 102, 50, 135, 91, 9, 66, 89, 5, 64, 41, 60, 130, 80, 1, 105, 128, 112, 49, 33, 19, 129, 17, 88, 15, 108, 120, 35, 65, 94, 26, 127, 30, 46, 123, 85, 113, 71, 111, 3, 32, 56, 119]
+            
             feat_list=[]
             feat_list.append(nr_feat_to_select)
+            
             print feat_list
 
             get_selected_features(feat_list, options.train_file, options.val_file, options.predict_file)
             
             model = learn("C:\Users\\t000524\Documents\data\Fold1\\selected_train_features.txt", "C:\Users\\t000524\Documents\data\Fold1\\selected_validation_features.txt", n_trees=100)
             ndcg_at_k=evaluate(model, "C:\Users\\t000524\Documents\data\Fold1\\selected_test_features.txt",str(nr_feat_to_select))
-            
             ndcg_at_k_list.append(ndcg_at_k)
 
         print ndcg_at_k_list

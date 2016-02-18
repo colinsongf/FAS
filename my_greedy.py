@@ -1,7 +1,6 @@
 '''
 Description:
-GREEDY ALGORITH: return the L features most correlated with y 
-and less correlated with the others starting with the feature 
+GREEDY ALGORITH: return the L features most correlated with y and less correlated with the others, starting with the feature 
 most correlated with y
 
 Input:
@@ -38,6 +37,7 @@ for nr in L:
        ...
        featn: {feat1: corr(x2,x1), feat2: corr(x2,x2),...featn:corr(x2,xn)}}
     '''
+    
     D=dict()
     
     corr_row=corr_file.readline()

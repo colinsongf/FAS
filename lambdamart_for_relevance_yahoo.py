@@ -5,12 +5,9 @@ import numpy as np
 import csv
 from optparse import OptionParser
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.tree import export_graphviz
 from multiprocessing import Pool
 from itertools import chain
-import time
 import pandas as pd
-from numpy import mean
 
 class Ensemble:
     def __init__(self, rate):
@@ -77,6 +74,7 @@ def compute_ndcg(page, k=10):
         return 1
 
     return dcg / idcg
+
 
 def ndcg(prediction, true_score, query, k=10):
     true_pages = groupby(true_score, query)
@@ -158,25 +156,17 @@ def learn(train_file, validation_file, nomi_features, n_trees=10, learning_rate=
     model_output = np.array([float(0)] * len(features))
     val_output = np.array([float(0)] * len(validation))
 
-    #time.clock()
     for i in range(n_trees):
         
         print " Iteration: " + str(i + 1)
 
-        # Compute psedo responces (lambdas)
-        # witch act as training label for document
-
-        #start = time.clock()
         print "  --generating labels"
         # lambdas = compute_lambdas(model_output, scores, queries, k)
         lambdas = mart_responces(model_output, scores)
-        #print "  --done", str(time.clock() - start) + "sec"
-
+        
         # create tree and append it to the model
         print "  --fitting tree"
-        #start = time.clock()
         tree = DecisionTreeRegressor(max_depth=2)
-        #print "Distinct lambdas", set(lambdas)
         fitted_tree=tree.fit(features, lambdas)
 
         print "  --adding tree to ensemble"
@@ -190,11 +180,10 @@ def learn(train_file, validation_file, nomi_features, n_trees=10, learning_rate=
         model_output += learning_rate * prediction
 
         # train_score
-        #start = time.clock()
         print "  --scoring on train"
         train_score = ndcg(model_output, scores, queries, 10)
-        print "  --iteration train score " + str(train_score) #+ ", took " + str(time.clock() - start) + "sec to calculate"
-
+        print "  --iteration train score " + str(train_score) 
+        
         # validation score
         print "  --scoring on validation"
         val_output += learning_rate * tree.predict(val_features)
@@ -227,6 +216,7 @@ def evaluate(model, fn,i):
 
     return ndcg_at_k
 
+
 def feat_ranker(feat_number,measure_name):
     feat_rank_path='C:\Users\\t000524\Documents\data\Webscope_C14B\\feature_rank.txt'
     df=pd.read_csv(feat_rank_path,
@@ -235,11 +225,11 @@ def feat_ranker(feat_number,measure_name):
                    usecols=[measure_name],
                    header=0)
     
-    #print len(df)
     df["feat_nr"]=range(1,len(df)+1)
     result = df.sort([measure_name], ascending=False)
     
     return result['feat_nr'].head(n=feat_number).tolist()
+
 
 def average_ndcg(rpath,k):
     #mean absolut error macroaveraging
@@ -252,7 +242,6 @@ def average_ndcg(rpath,k):
     
     for i in cases:
         subdf = df[(df.iloc[:,0] == i)]
-#        ndcg.append(ndcg_at_k(subdf.iloc[:,1],k))
     
     maem=[]
     print "MAEM: ", maem
@@ -272,7 +261,6 @@ def get_selected_features(feature_list, train_path, vali_path, test_path):
                    header=0)
     
     df.to_csv("C:\Users\\t000524\Documents\data\Webscope_C14B\\selected_train_features.txt",sep="\t",header=False,index=False)
-    #print df.head(n=5)
     
     df=pd.read_csv(vali_path,
                    sep="\t",
@@ -281,7 +269,6 @@ def get_selected_features(feature_list, train_path, vali_path, test_path):
                    header=0)
     
     df.to_csv("C:\Users\\t000524\Documents\data\Webscope_C14B\\selected_validation_features.txt",sep="\t",header=False,index=False)
-    #print df.head(n=5)
     
     df=pd.read_csv(test_path,
                    sep="\t",
@@ -290,14 +277,16 @@ def get_selected_features(feature_list, train_path, vali_path, test_path):
                    header=0)
     
     df.to_csv("C:\Users\\t000524\Documents\data\Webscope_C14B\\selected_test_features.txt",sep="\t",header=False,index=False)
-    #print df.head(n=5)
 
 if __name__ == "__main__":
+    
     parser = OptionParser()
     parser.add_option("-t", "--train", action="store", type="string", dest="train_file")
     parser.add_option("-v", "--validation", action="store", type="string", dest="val_file")
     parser.add_option("-p", "--predict", action="store", type="string", dest="predict_file")
+    
     options, args = parser.parse_args()
+    
     learning_rate = 0.1
     ndcg_at_k_matrix=[]
 
