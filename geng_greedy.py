@@ -121,7 +121,7 @@ for nr_feat in L:
 
         #spread penalities over the remaining features through the hyperparameter
         for d in D[temp]:
-            R[d]=R[d]-2*c*D[temp][d]
+            R[d]=R[d]-2*c*D[temp][d]+0
         
         #remove selected from Relevance Vector
         R.pop(temp,0)
