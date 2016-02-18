@@ -30,7 +30,7 @@ for nr in L:
     
     corr_file=open(similarity_path,'r')
     
-    #build a dictionary containing correlation matrix
+    #build a dictionary containing a similarity matrix
     D=dict()
     
     corr_row=corr_file.readline()
@@ -64,11 +64,11 @@ for nr in L:
         
         corr_row=corr_file.readline()
     
-    #upload (Xi,Y) correlation vector saved in a file
+    #upload the relevance vector from the file
 
     r_file=open(relevance_path,'r')
     
-    #build a dictionary containing corr(xi,y)
+    #build a dictionary containing the relevance vector
     R=dict()
     
     #skip head line
@@ -96,7 +96,7 @@ for nr in L:
     
     feature_list=[]
     
-    #start from the most y-correlated feature
+    #start from the most relevant feature
     temp=max(R, key=R.get)
     
     feature_list.append(int(temp.strip('feat')))
@@ -109,7 +109,6 @@ for nr in L:
         
         print nr, len(D[temp]), param
         
-        #fmin=min(D[temp],key=D[temp].get)
         fmin_list=sorted(D[temp], key=D[temp].get, reverse=False)[:param]
             
         for d in D:

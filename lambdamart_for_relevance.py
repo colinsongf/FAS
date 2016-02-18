@@ -157,17 +157,18 @@ def learn(train_file, validation_file, n_trees=10, learning_rate=0.1, k=10):
     model_output = np.array([float(0)] * len(features))
     val_output = np.array([float(0)] * len(validation))
 
-    # print model_output
-    # best_validation_score = 0
-    time.clock()
+    
+    #time.clock()
+    
     for i in range(n_trees):
         print " Iteration: " + str(i + 1)
 
         # Compute psedo responces (lambdas)
         # witch act as training label for document
+        
         #start = time.clock()
         print "  --generating labels"
-        # lambdas = compute_lambdas(model_output, scores, queries, k)
+        #lambdas = compute_lambdas(model_output, scores, queries, k)
         lambdas = mart_responces(model_output, scores)
         #print "  --done", str(time.clock() - start) + "sec"
 
@@ -186,11 +187,9 @@ def learn(train_file, validation_file, n_trees=10, learning_rate=0.1, k=10):
         # update model score
         print "  --generating step prediction"
         prediction = tree.predict(features)
-        #print "Distinct answers", set(prediction)
 
         print "  --updating full model output"
         model_output += learning_rate * prediction
-        # print set(model_output)
 
         # train_score
         #start = time.clock()
@@ -206,24 +205,6 @@ def learn(train_file, validation_file, n_trees=10, learning_rate=0.1, k=10):
         print "  --iteration validation score " + str(val_score)
 
 
-        # if(validation_score > best_validation_score):
-        #         best_validation_score = validation_score
-        #         best_model_len = len(ensemble)
-
-        # # have we assidently break the celling?
-        # if (best_validation_score > 0.9):
-        #     break
-
-    # rollback to best
-    # if len(ensemble) > best_model_len:
-        # ensemble.remove(len(ensemble) - best_model_len)
-
-    # finishing up
-    print "final quality evaluation"
-    #train_score = compute_ndcg(ensemble.eval(features), scores)
-    #test_score = compute_ndcg(ensemble.eval(validation), val_score)
-
-    #print "train %s, test %s" % (train_score, test_score)
     print "Finished successfully."
     print "------------------------------------------------"
     return ensemble
@@ -247,23 +228,6 @@ def evaluate(model, fn,i):
     csvfile.close()
 
     return ndcg_at_k
-
-def maem(rpath):
-    #mean absolut error macroaveraging
-    
-    df=pd.read_csv(rpath,sep=",",skiprows=0,header=0)
-    
-    cases=set(df.iloc[:,2].tolist())
-
-    mae=[]
-    
-    for i in cases:
-        subdf = df[(df.iloc[:,2] == i)]
-        mae.append(np.average(abs(subdf.iloc[:,1]-subdf.iloc[:,2])))
-    
-    maem=mean(mae)
-    print "MAEM: ", maem
-    return maem
 
 def feat_ranker(feat_number,measure_name):
     feat_rank_path='C:\Users\\t000524\Documents\data\Fold1\\feature_rank.txt'

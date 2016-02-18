@@ -158,14 +158,14 @@ def learn(train_file, validation_file, nomi_features, n_trees=10, learning_rate=
     model_output = np.array([float(0)] * len(features))
     val_output = np.array([float(0)] * len(validation))
 
-    # print model_output
-    # best_validation_score = 0
     #time.clock()
     for i in range(n_trees):
+        
         print " Iteration: " + str(i + 1)
 
         # Compute psedo responces (lambdas)
         # witch act as training label for document
+
         #start = time.clock()
         print "  --generating labels"
         # lambdas = compute_lambdas(model_output, scores, queries, k)
@@ -178,25 +178,16 @@ def learn(train_file, validation_file, nomi_features, n_trees=10, learning_rate=
         tree = DecisionTreeRegressor(max_depth=2)
         #print "Distinct lambdas", set(lambdas)
         fitted_tree=tree.fit(features, lambdas)
-        outfile=export_graphviz(fitted_tree, out_file='C:\Users\\t000524\Documents\data\Webscope_C14B\\filename.dot',feature_names=nomi_features)
-        ftw = open("C:\Users\\t000524\Documents\data\Webscope_C14B\\bigfile.txt", "a")
-        ftr = open("C:\Users\\t000524\Documents\data\Webscope_C14B\\filename.dot", "r")
-        ftw.write(ftr.read())
-        ftw.close()
-        ftr.close()
 
-        #print "  ---done", str(time.clock() - start) + "sec"
         print "  --adding tree to ensemble"
         ensemble.add(fitted_tree)
 
         # update model score
         print "  --generating step prediction"
         prediction = tree.predict(features)
-        #print "Distinct answers", set(prediction)
 
         print "  --updating full model output"
         model_output += learning_rate * prediction
-        # print set(model_output)
 
         # train_score
         #start = time.clock()
@@ -211,25 +202,7 @@ def learn(train_file, validation_file, nomi_features, n_trees=10, learning_rate=
 
         print "  --iteration validation score " + str(val_score)
 
-
-        # if(validation_score > best_validation_score):
-        #         best_validation_score = validation_score
-        #         best_model_len = len(ensemble)
-
-        # # have we assidently break the celling?
-        # if (best_validation_score > 0.9):
-        #     break
-
-    # rollback to best
-    # if len(ensemble) > best_model_len:
-        # ensemble.remove(len(ensemble) - best_model_len)
-
     # finishing up
-    print "final quality evaluation"
-    #train_score = compute_ndcg(ensemble.eval(features), scores)
-    #test_score = compute_ndcg(ensemble.eval(validation), val_score)
-
-    #print "train %s, test %s" % (train_score, test_score)
     print "Finished successfully."
     print "------------------------------------------------"
     return ensemble
@@ -253,23 +226,6 @@ def evaluate(model, fn,i):
     csvfile.close()
 
     return ndcg_at_k
-
-def maem(rpath):
-    #mean absolut error macroaveraging
-    
-    df=pd.read_csv(rpath,sep=",",skiprows=0,header=0)
-    
-    cases=set(df.iloc[:,2].tolist())
-
-    mae=[]
-    
-    for i in cases:
-        subdf = df[(df.iloc[:,2] == i)]
-        mae.append(np.average(abs(subdf.iloc[:,1]-subdf.iloc[:,2])))
-    
-    maem=mean(mae)
-    print "MAEM: ", maem
-    return maem
 
 def feat_ranker(feat_number,measure_name):
     feat_rank_path='C:\Users\\t000524\Documents\data\Webscope_C14B\\feature_rank.txt'
@@ -342,34 +298,23 @@ if __name__ == "__main__":
     parser.add_option("-v", "--validation", action="store", type="string", dest="val_file")
     parser.add_option("-p", "--predict", action="store", type="string", dest="predict_file")
     options, args = parser.parse_args()
-    iterations = 1000
     learning_rate = 0.1
     ndcg_at_k_matrix=[]
 
-    '''
-    print "Baseline model: LambdaMart su tutte le features"
-    model = learn(options.train_file, options.val_file, n_trees=200)
-    evaluate(model, options.predict_file)
-    rpath='C:\Users\\t000524\Documents\data\Webscope_C14B\\results.txt'
-    maems.append(maem(rpath))
-    print maems
-    '''
-    
     trials=range(1,700)
-    measures=["MI"]
+    measures=["ndcg"]
     
     for measure in measures:
         ndcg_at_k_list=[]
         for nr_feat_to_select in trials:
-            #feat_list=feat_ranker(nr_feat_to_select, measure)
-            #feat_list=[134, 126, 96, 43, 103, 14, 100, 133, 102, 50, 135, 91, 9, 66, 89, 5, 64, 41, 60, 130, 80, 1, 105, 128, 112, 49, 33, 19, 129, 17, 88, 15, 108, 120, 35, 65, 94, 26, 127, 30, 46, 123, 85, 113, 71, 111, 3, 32, 56, 119]
+            
             feat_list=[]
             feat_list.append(nr_feat_to_select)
             print feat_list
 
             get_selected_features(feat_list, options.train_file, options.val_file, options.predict_file)
             
-            model = learn("C:\Users\\t000524\Documents\data\Webscope_C14B\\selected_train_features.txt", "C:\Users\\t000524\Documents\data\Webscope_C14B\\selected_validation_features.txt", feat_list, n_trees=100)
+            model = learn("C:\Users\\t000524\Documents\data\Webscope_C14B\\selected_train_features.txt", "C:\Users\\t000524\Documents\data\Webscope_C14B\\selected_validation_features.txt", feat_list, n_trees=10)
             ndcg_at_k=evaluate(model, "C:\Users\\t000524\Documents\data\Webscope_C14B\\selected_test_features.txt",str(nr_feat_to_select))
             
             ndcg_at_k_list.append(ndcg_at_k)

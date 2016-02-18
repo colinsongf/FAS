@@ -1,21 +1,20 @@
 '''
-The script takes a similarity matrix and a relevance vector
-from files and run a greedy algorithm in order
-to select selecting the n features mostly relevant for y and less 
-similar with other features. 
-It starting from the feature most correlated with y
-Output: list of feature subsets
+Description:
+GREEDY ALGORITH: return the L features most correlated with y 
+and less correlated with the others starting with the feature 
+most correlated with y
+
+Input:
+A similarity matrix and a relevance vector from files
+
+Output:
+A list of feature subsets
 '''
 
 #file paths
 root='/home/asus/quickrank/data/Fold1/'
 similarity_path=root+'spear_corr.txt'
 relevance_path=root+'NDCG_single_feature.txt'
-
-
-#GREEDY ALGORITH: return the L features most correlated with y 
-#and less correlated with the others starting with the feature 
-#most correlated with y
 
 #set the number of feature to select
 L=[7,14,27,41,54,68,102]
