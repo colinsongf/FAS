@@ -1,21 +1,20 @@
 '''
 The script reads a similarity matrix file (tab separated) and a relevance vector
-from files and run a greedy algorithm from GENG et al.  in order
-to select the n features mostly relevant for y and less 
-similar with other features.
-
+from files and run a greedy algorithm from GENG et al.  in order to select the n 
+most relevant features which are less similar with each other.
 It starts from the feature most correlated with y
+
 Output: list of feature subsets
 '''
 
 #################      INPUT      ##########################
 
-#file paths
+#file path
 root='C:\Users\\t000524\Documents\data\Fold1\\' #change this
 
-#similarity matrix file name
+#similarity matrix file path
 similarity_path=root+'spear_corr.txt'
-#relevance vector file name
+#relevance vector file path
 relevance_path=root+'NDCG_single_feature.txt'
 
 #hyperparameter
@@ -41,6 +40,7 @@ for nr_feat in L:
     corr_file=open(similarity_path,'r')
     
     #build a dictionary of dictionaries containing the correlation matrix
+    
     '''
     D={feat1: {feat1: corr(x1,x1), feat2: corr(x1,x2),...featn:corr(x1,xn)},
        feat2: {feat1: corr(x2,x1), feat2: corr(x2,x2),...featn:corr(x2,xn)},

@@ -1,9 +1,9 @@
 '''
-The script takes a similarity matrix and a relevance vector
-from files and run a greedy algorithm in order
-to select selecting the n features mostly relevant for y and less 
-similar with other features. 
-It starting from the feature most correlated with y
+The script reads a similarity matrix file (tab separated) and a relevance vector
+from files and run a the greedy algorithm XGAS from Gigli, Nardini, Lucchese, Perego
+in order to select the n most relevant features which are less similar with each other.
+
+It starts from the feature most correlated with y
 Output: list of feature subsets
 '''
 
