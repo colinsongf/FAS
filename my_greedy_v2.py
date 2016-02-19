@@ -4,27 +4,33 @@ from files and run a the greedy algorithm XGAS from Gigli, Nardini, Lucchese, Pe
 in order to select the n most relevant features which are less similar with each other.
 
 It starts from the feature most correlated with y
-Output: list of feature subsets
+Output: list of feature subsets containing the feature number as int
+e.g. [99, 1, 2, 11, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 12, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 13, 121, 122, 123, 124]
+
 '''
+
+#################      INPUT      ##########################
 
 #file paths
 root='/home/asus/quickrank/data/Fold1/'
+
+#similarity matrix file path
 similarity_path=root+'spear_corr.txt'
+#relevance vector file path
 relevance_path=root+'NDCG_single_feature.txt'
 
+#hyperparameter
+c=0.05
+
+L=[7,14,27,41,54,68]
+
+#list of features to be excluded
 blacklist=[]
 
-#set the number of feature to select
-L=[7,14,27,41,54,68,102]
-#L=[54]
+############################################################
 
+#initialize a void list
 lists=[]
-
-
-#feature list will contain the feature number as int
-#e.g. [99, 1, 2, 11, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 12, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 13, 121, 122, 123, 124]
-#we assume feature will start from 0 and will be read as starting from 1, so 1 will be added to the output
-c=0.05
 
 for nr in L:
     
