@@ -71,7 +71,6 @@ for nr in L:
         corr_row=corr_file.readline()
     
     #upload the relevance vector from the file
-
     r_file=open(relevance_path,'r')
     
     #build a dictionary containing the relevance vector
