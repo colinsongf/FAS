@@ -310,7 +310,7 @@ if __name__ == "__main__":
     ndcg_at_k_matrix=[]
     
     trials=range(1,137)
-    measures=["MI"]
+    measures=["NDCG"]
     
     for measure in measures:
         

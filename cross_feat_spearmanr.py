@@ -16,8 +16,6 @@ X=df.loc[:,'feat1':'feat136']
 #reset df to free space
 df=0
 
-
-
 #get a list of features names
 names=list(X.columns.values)
 
