@@ -1,9 +1,9 @@
-#read train data file from MSN dataset and produce 3 array structures for future analyses. (one for label, one for query id, one for feature)
+#read raw train data from MSN dataset and produce a new file
+#containing label    query id    feature1    feature2    ...    featureN
+#(tab separated)
 
 root='C:\Users\\t000524\Documents\ex reuters\Learning to rank\FeatSel\Fold1\\'
-#n=600000
 
-#line_train_to_be_read=n
 label_array=[]
 query_array=[]
 feat_array=[]
@@ -21,10 +21,8 @@ while (feat_row!=""):
     feat_row_fields=feat_row.split(':')
     
     for i in range(len(feat_row_fields)):
-        #print feat_row_fields[i]
+
         feat_row_fields[i]=float(feat_row_fields[i].split(' ')[0])
-        #print feat_row_fields[i],"\n"
-    #print feat_row_fields
     
     label_array.append(feat_row_fields[0])
     query_array.append(feat_row_fields[1])
@@ -74,10 +72,7 @@ while (feat_row!=""):
     feat_row_fields=feat_row.split(':')
     
     for i in range(len(feat_row_fields)):
-        #print feat_row_fields[i]
         feat_row_fields[i]=float(feat_row_fields[i].split(' ')[0])
-        #print feat_row_fields[i],"\n"
-    #print feat_row_fields
     
     label_array.append(feat_row_fields[0])
     query_array.append(feat_row_fields[1])
@@ -87,9 +82,8 @@ while (feat_row!=""):
 
 print counter
 
-#print "\n\n", feat_array, "\n", query_array, "\n", label_array, "\n\n"
 
-#salvo un campione di dati su un file per esplorarne le caratteristiche
+#salvo i dati su file 
 
 with open(root+'sample_validation_features.txt','w') as wfile:
     
@@ -130,10 +124,8 @@ while (feat_row!=""):
     feat_row_fields=feat_row.split(':')
     
     for i in range(len(feat_row_fields)):
-        #print feat_row_fields[i]
+
         feat_row_fields[i]=float(feat_row_fields[i].split(' ')[0])
-        #print feat_row_fields[i],"\n"
-    #print feat_row_fields
     
     label_array.append(feat_row_fields[0])
     query_array.append(feat_row_fields[1])
@@ -142,9 +134,8 @@ while (feat_row!=""):
     feat_row=feat_file.readline()
 
 print counter
-#print "\n\n", feat_array, "\n", query_array, "\n", label_array, "\n\n"
 
-#salvo un campione di dati su un file per esplorarne le caratteristiche
+#salvo i dati su file 
 
 with open(root+'sample_test_features.txt','w') as wfile:
     

@@ -1,14 +1,14 @@
 '''
-The script reads a similarity matrix file (tab separated) and a relevance vector
-from files and run a greedy algorithm from GENG et al.  in order to select the n 
+The script reads a tab separated file representing features similarity and a file 
+containing a relevance vector. Then it runs GAS in order to select the n 
 most relevant features which are less similar with each other.
-It starts from the feature most correlated with y
+
+It starts from the feature most correlated with y.
 
 Output: list of feature subsets containing the feature number as int
 e.g. [99, 1, 2, 11, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 12, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 13, 121, 122, 123, 124]
 
 '''
-
 #################      INPUT      ##########################
 
 #file path

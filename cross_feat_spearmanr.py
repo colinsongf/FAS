@@ -2,15 +2,16 @@ from __future__ import division
 from scipy import stats
 import pandas as pd
 
+#data root
 root="/home/asus/quickrank/data/Fold1/"
 
 #read train data
-df=pd.read_csv(root+'sample_train_features.txt', sep='\t',header=0)#,nrows=90000)
+df=pd.read_csv(root+'sample_train_features.txt', sep='\t',header=0) #,nrows=90000)
 
-#define Y as the label vector
+#Let Y be the label vector
 Y=df['label']
 
-#define X as the features matrix
+#Let X be the feature matrix (Bing case)
 X=df.loc[:,'feat1':'feat136']
 
 #reset df to free space
@@ -39,7 +40,8 @@ for i in range(len(names)):
         else:
             temp.append(spear_corr[j][i])
     
-    #save spearman matrix in a file, tab separated
+    #save spearman matrix in a tab separated file
+    
     with open(root+'spear_corr.txt', 'a') as f:
         for ele in temp:
             f.write("%f\t" % ele)
