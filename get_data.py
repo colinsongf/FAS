@@ -52,8 +52,7 @@ with open(root+'sample_train_features.txt','w') as wfile:
 wfile.close()
 
 
-n=235000
-line_validation_to_be_read=n
+
 label_array=[]
 query_array=[]
 feat_array=[]
@@ -106,7 +105,7 @@ with open(root+'sample_validation_features.txt','w') as wfile:
         
 wfile.close()
 
-line_test_to_be_read=n
+
 label_array=[]
 query_array=[]
 feat_array=[]

@@ -62,7 +62,7 @@ def compute_distribution(v):
     """
     v: vettore di interi
     
-    ottengo un dictionary con chiave pari all'intero e valore pari alla probabilità 
+    ottengo un dictionary con chiave pari all'intero e valore pari alla probabilit
     """
     d= defaultdict(int)
     for e in v: d[e]+=1
@@ -120,7 +120,7 @@ for i in range(len(names)):
         SSDX+=Ng*(mean(X.loc[idx[j],names[i]].as_matrix())-feature_mean)**2
     AGvar.append(1-SSDX/TSS)
     
-with open(root+'feature_rank.txt','w') as wfile:
+with open(root+'feature_rank_temp.txt','w') as wfile:
     wfile.write("label\tNMI\tAG1\tKen\tSpea\n")
     for i in range(len(names)):
         wfile.write("%s\n" % (str(names[i])+

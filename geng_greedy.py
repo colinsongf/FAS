@@ -12,7 +12,7 @@ e.g. [99, 1, 2, 11, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 12, 111, 1
 #################      INPUT      ##########################
 
 #file path
-root='C:\Users\\t000524\Documents\data\Fold1\\' #change this
+root='/home/asus/quickrank/data/Fold1/' #change this
 
 #similarity matrix file path
 similarity_path=root+'spear_corr.txt'

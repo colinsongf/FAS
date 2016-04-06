@@ -268,9 +268,12 @@ def get_selected_features(feature_list, train_path, vali_path, test_path):
     feature_labels=["label","query"]
     
     for i in feature_list:
-        feature_labels.append("feat"+str(i))
+        feature_labels.append(str(i))
     
     print train_path
+    print feature_list
+    
+    print "Leggo train..."
     
     df=pd.read_csv(train_path,
                    sep="\t",
@@ -278,22 +281,28 @@ def get_selected_features(feature_list, train_path, vali_path, test_path):
                    usecols=feature_labels,
                    header=0)
     
+    
+    print "Salvo train..."
     df.to_csv("C:\Users\\t000524\Documents\data\Fold1\\selected_train_features.txt",sep="\t",header=False,index=False)
     
+    print "Leggo vali..."
     df=pd.read_csv(vali_path,
                    sep="\t",
                    skiprows=0,
                    usecols=feature_labels,
                    header=0)
     
+    print "Salvo vali..."
     df.to_csv("C:\Users\\t000524\Documents\data\Fold1\\selected_validation_features.txt",sep="\t",header=False,index=False)
     
+    print "Leggo test..."
     df=pd.read_csv(test_path,
                    sep="\t",
                    skiprows=0,
                    usecols=feature_labels,
                    header=0)
     
+    print "Salvo test..."
     df.to_csv("C:\Users\\t000524\Documents\data\Fold1\\selected_test_features.txt",sep="\t",header=False,index=False)
 
 if __name__ == "__main__":
@@ -309,8 +318,15 @@ if __name__ == "__main__":
     learning_rate = 0.1
     ndcg_at_k_matrix=[]
     
-    trials=range(1,137)
+    #trials=range(1,137)
     measures=["NDCG"]
+    
+    trials=[]
+    
+    for i in range(1,137):
+        feat="feat"+str(i)
+        print "includo ", feat
+        trials.append(feat)
     
     for measure in measures:
         
@@ -324,8 +340,9 @@ if __name__ == "__main__":
             print feat_list
 
             get_selected_features(feat_list, options.train_file, options.val_file, options.predict_file)
-            
+            print "Learning..."
             model = learn("C:\Users\\t000524\Documents\data\Fold1\\selected_train_features.txt", "C:\Users\\t000524\Documents\data\Fold1\\selected_validation_features.txt", n_trees=100)
+            print "Evaluating..."
             ndcg_at_k=evaluate(model, "C:\Users\\t000524\Documents\data\Fold1\\selected_test_features.txt",str(nr_feat_to_select))
             ndcg_at_k_list.append(ndcg_at_k)
 
